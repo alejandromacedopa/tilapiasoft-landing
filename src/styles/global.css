@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html { font-size: 20px; } /* ligeramente más grande que 16px */
+    html:focus-within { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html:focus-within { scroll-behavior: auto; }
+    }
+    body { @apply text-slate-800 bg-slate-50 antialiased; }
+  }
+  
+  /* Animación de entrada */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  [data-reveal] { opacity: 0; }
+  .revealed {
+    opacity: 1;
+    animation: fade-up .5s ease-out both;
+    animation-delay: var(--d, 0ms);
+  }

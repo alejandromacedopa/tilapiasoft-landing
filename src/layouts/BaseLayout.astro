@@ -1,0 +1,39 @@
+---
+const {
+  title = "TilapiaSoft – Monitorea tu Piscicultura con Precisión",
+  description = "Monitoreo en tiempo real de pH, oxígeno, temperatura y población para piscicultura de tilapia.",
+} = Astro.props;
+import "../styles/global.css";
+---
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style> :root { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; } </style>
+  </head>
+  <body>
+    <slot />
+
+    <!-- Reveal on scroll (muy liviano) -->
+    <script is:inline>
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!prefersReduced && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('revealed');
+              io.unobserve(e.target);
+            }
+          }
+        }, { rootMargin: "0px 0px -10% 0px", threshold: 0.08 });
+        document.querySelectorAll("[data-reveal]").forEach(el => io.observe(el));
+      } else {
+        document.querySelectorAll("[data-reveal]").forEach(el => el.classList.add('revealed'));
+      }
+    </script>
+  </body>
+</html>
