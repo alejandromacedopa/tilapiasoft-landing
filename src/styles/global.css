@@ -9,7 +9,7 @@
     @media (prefers-reduced-motion: reduce) {
       html:focus-within { scroll-behavior: auto; }
     }
-    body { @apply text-slate-800 bg-slate-50 antialiased; }
+    body { @apply text-slate-800 bg-slate-50 antialiased; } 
   }
   
   /* Animación de entrada */
