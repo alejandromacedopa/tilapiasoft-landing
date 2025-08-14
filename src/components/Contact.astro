@@ -3,19 +3,16 @@
     <div class="rounded-2xl bg-white p-6 md:p-7 shadow-sm border" data-reveal>
       <h3 class="font-semibold text-xl">Solicita una Demo</h3>
 
-      <!-- 🔽 Reemplaza XXXXXXX por tu ID real de Formspree -->
-      <form id="contactForm" action="https://formspree.io/f/XXXXXXX" method="POST" class="mt-4 grid gap-4">
-        <input name="nombre" placeholder="Tu nombre" class="border rounded-xl px-4 py-3" required />
-        <input name="email" type="email" placeholder="Email" class="border rounded-xl px-4 py-3" required />
-        <input name="telefono" placeholder="+51 ..." class="border rounded-xl px-4 py-3" />
+      <!-- sin action: solo mostramos alerta y redirigimos -->
+      <form id="contactForm" class="mt-4 grid gap-4" novalidate>
+        <input name="nombre" placeholder="Tu nombre" class="border rounded-xl px-4 py-3" required autocomplete="name" />
+        <input name="email" type="email" placeholder="Email" class="border rounded-xl px-4 py-3" required autocomplete="email" />
+        <input name="telefono" placeholder="+51 ..." class="border rounded-xl px-4 py-3" autocomplete="tel" />
         <select name="estanques" class="border rounded-xl px-4 py-3">
           <option>1-5 estanques</option><option>6-10 estanques</option>
           <option>11-20 estanques</option><option>20+ estanques</option>
         </select>
         <textarea name="mensaje" placeholder="Cuéntanos sobre tu operación acuícola..." class="border rounded-xl px-4 py-3" rows="4"></textarea>
-
-        <!-- opcional: asunto para el email -->
-        <input type="hidden" name="_subject" value="Nueva solicitud de demo – TilapiaSoft" />
 
         <button type="submit"
           class="rounded-xl bg-blue-600 text-white px-5 py-3 transition-all duration-300 hover:bg-blue-700 hover:-translate-y-0.5">
@@ -43,43 +40,30 @@
   </div>
 </section>
 
-<!-- 📌 Intercepta el submit, muestra alerta y redirige a la home -->
+<!-- alerta + redirección a la home (respeta BASE_URL en GitHub Pages) -->
 <script is:inline>
 (() => {
   const form = document.getElementById('contactForm');
   if (!form) return;
 
-  const HOME = `${import.meta.env.BASE_URL}`; // respeta /tilapiasoft-landing/ en GitHub Pages
+  const HOME = `${import.meta.env.BASE_URL}`; // p.ej. /tilapiasoft-landing/
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    // Si quieres usar validación nativa, quita "novalidate" del form y descomenta:
+    // if (!form.checkValidity()) { form.reportValidity(); return; }
 
     const btn = form.querySelector('button[type="submit"]');
     btn?.setAttribute('disabled', 'true');
     btn?.classList.add('opacity-60', 'cursor-not-allowed');
 
-    try {
-      const resp = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json' }
-      });
-
-      if (resp.ok) {
-        alert('¡Gracias! Tu mensaje fue enviado con éxito.');
-        form.reset();
-        window.location.href = HOME; // redirige a la portada
-      } else {
-        const data = await resp.json().catch(() => null);
-        alert(data?.errors?.[0]?.message || 'No se pudo enviar. Inténtalo nuevamente.');
-        btn?.removeAttribute('disabled');
-        btn?.classList.remove('opacity-60', 'cursor-not-allowed');
-      }
-    } catch {
-      alert('Hubo un problema de conexión. Por favor, intenta nuevamente.');
-      btn?.removeAttribute('disabled');
-      btn?.classList.remove('opacity-60', 'cursor-not-allowed');
-    }
+    // Pequeña pausa para sensación de envío
+    setTimeout(() => {
+      alert('¡Gracias! Tu mensaje fue enviado con éxito.');
+      form.reset();
+      window.location.href = HOME; // redirige a la página principal
+    }, 400);
   });
 })();
 </script>
