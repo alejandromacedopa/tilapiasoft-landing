@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -26,12 +26,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install deps
-        run: npm ci
-        # Si no tienes package-lock.json o falla, usa:
-        # run: npm install
+      # 👇 Necesario para GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - name: Build
+      - name: Install deps
+        run: npm ci || npm i
+
+      - name: Build (Astro)
         run: npm run build
 
       - name: Upload artifact
